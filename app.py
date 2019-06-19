@@ -80,6 +80,8 @@ def sip(navs, initial):
         values[month]["nav"] = str(nav)
         values[month]["amount_invested"] = str(round(initial, 2))
         values[month]["units_brought"] = str(round(units, 2))
+        values[month]["cumulative_units"] = str(round(totalUnits, 2))
+
         print(month + "\t\t" + str(nav) + "\t\t" +
               str(round(initial, 2)) + "\t\t" + str(round(units, 2)))
     print()
@@ -108,6 +110,8 @@ def vip(navs, initial):
         values[month]["target_amount"] = str(round(target, 2))
         values[month]["amount_invested"] = str(round(amount, 2))
         values[month]["units_brought"] = str(round(units, 2))
+        values[month]["cumulative_units"] = str(round(totalUnits, 2))
+
         print(month + "\t\t" + str(nav) + "\t\t" + str(round(target, 2)) +
               "\t\t" + str(round(amount, 2)) + "\t\t" + str(round(units, 2)))
 
