@@ -14,19 +14,19 @@
   <div style="display: flex;justify-content: center;height: 80vh;">
     <form method="post" action="/results" class="ui form">
       <h3>Fund House:</h3>
-      <input type="text" name="fund" />
+      <input type="text" name="fund" required />
       <h3>Category:</h3>
-      <input type="text" name="category" />
+      <input type="text" name="category" required />
       <h3>Scheme:</h3>
-      <input type="text" name="scheme" />
+      <input type="text" name="scheme" required />
       <h3>Investment Amount:</h3>
-      <input type="text" name="amount" /><br />
+      <input type="text" name="amount" required /><br />
       <h3>Expected Return:</h3>
-      <input type="text" name="return" /><br />
+      <input type="text" name="return" required /><br />
       <h3>Start Date:</h3>
-      <input type="text" name="start" />(dd/mm/yyyy)<br />
+      <input type="text" name="start" required />(dd/mm/yyyy)<br />
       <h3>End Date:</h3>
-      <input type="text" name="end" />(dd/mm/yyyy)<br /><br />
+      <input type="text" name="end" required />(dd/mm/yyyy)<br /><br />
       <button
         class="ui button"
         type="submit"
