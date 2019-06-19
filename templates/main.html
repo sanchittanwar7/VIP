@@ -1,22 +1,40 @@
 <head>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css">
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </head>
 
 <body>
-    <div style="display: flex;justify-content: center;height: 80vh;">
-        <form method="post" action="/results" class="ui form">
-            <h3>Fund House: </h3>
-            <input type="text" name="fund">
-            <h3>Category: </h3>
-            <input type="text" name="category">
-            <h3>Scheme: </h3>
-            <input type="text" name="scheme">
-            <h3>Investment Amount: </h3><input type="text" name="amount"><br>
-            <h3>Start Date: </h3><input type="text" name="start">(dd/mm/yyyy)<br>
-            <h3>End Date: </h3><input type="text" name="end">(dd/mm/yyyy)<br><br>
-            <button class="ui button" type="submit" class="btn btn-primary" id="btnSignUp">Go</button>
-        </form>
-    </div>
+  <div style="display: flex;justify-content: center;height: 80vh;">
+    <form method="post" action="/results" class="ui form">
+      <h3>Fund House:</h3>
+      <input type="text" name="fund" />
+      <h3>Category:</h3>
+      <input type="text" name="category" />
+      <h3>Scheme:</h3>
+      <input type="text" name="scheme" />
+      <h3>Investment Amount:</h3>
+      <input type="text" name="amount" /><br />
+      <h3>Expected Return:</h3>
+      <input type="text" name="return" /><br />
+      <h3>Start Date:</h3>
+      <input type="text" name="start" />(dd/mm/yyyy)<br />
+      <h3>End Date:</h3>
+      <input type="text" name="end" />(dd/mm/yyyy)<br /><br />
+      <button
+        class="ui button"
+        type="submit"
+        class="btn btn-primary"
+        id="btnSignUp"
+      >
+        Go
+      </button>
+    </form>
+  </div>
 </body>

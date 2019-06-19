@@ -36,8 +36,10 @@ def index():
     for month, detail in vip_values.items():
         vip_no_of_months = vip_no_of_months + 1
         vip_amount_invested += float(detail.get("amount_invested"))
-        vip_amount_return = detail.get("target_amount")
+        vip_amount_return = float(detail.get("target_amount"))
         vip_total_units += float(detail.get("units_brought"))
+    vip_return = ((vip_amount_return/vip_amount_invested)
+                  ** (24/vip_no_of_months) - 1)*100
 
     sip_no_of_months = 0
     sip_amount_invested = 0
@@ -49,16 +51,20 @@ def index():
         sip_total_units += float(detail.get("units_brought"))
         latest_nav = float(detail.get("nav"))
     sip_amount_return = sip_total_units * latest_nav
+    sip_return = ((sip_amount_return/sip_amount_invested)
+                  ** (24/sip_no_of_months) - 1)*100
 
     conclusion = {}
     conclusion["vip_no_of_months"] = vip_no_of_months
     conclusion["vip_amount_invested"] = vip_amount_invested
     conclusion["vip_amount_return"] = vip_amount_return
     conclusion["vip_total_units"] = vip_total_units
+    conclusion["vip_return"] = vip_return
     conclusion["sip_no_of_months"] = sip_no_of_months
     conclusion["sip_amount_invested"] = sip_amount_invested
     conclusion["sip_amount_return"] = sip_amount_return
     conclusion["sip_total_units"] = sip_total_units
+    conclusion["sip_return"] = sip_return
 
     return render_template('table.html', vip_details=vip_values, sip_details=sip_values, result=conclusion)
 
