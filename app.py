@@ -9,6 +9,9 @@ from collections import OrderedDict
 
 
 app = Flask(__name__)
+navs = OrderedDict()
+amount = 0.0
+expected_return = 0.0
 
 
 @app.route('/')
@@ -16,20 +19,8 @@ def hello():
     return render_template('main.html')
 
 
-@app.route('/results', methods=['POST'])
-def index():
-    count = ret()
-    fund_house = request.form['fund']
-    category = request.form['category']
-    scheme = request.form['scheme']
-    amount = request.form['amount']
-    expected_return = float(request.form['return'])
-    stock = float(request.form['stock'])
-    start = request.form['start']
-    end = request.form['end']
-    print(fund_house, category, scheme, amount, expected_return, start, end)
-    navs = getNAVs(fund_house, category, scheme, amount, start, end)
-    print(navs)
+@app.route('/tables', methods=['POST'])
+def tab():
     sip_values = sip(navs, float(amount))
     tip_values = tip(navs, float(amount), 0.0)
     vip_values = vip(navs, float(amount), expected_return/12)
@@ -90,6 +81,86 @@ def index():
     conclusion["sip_return"] = sip_return
 
     return render_template('table.html', vip_details=vip_values, tip_details=tip_values, sip_details=sip_values, result=conclusion)
+
+
+@app.route('/results', methods=['POST'])
+def index():
+    count = ret()
+    global navs
+    global amount
+    global expected_return
+    fund_house = request.form['fund']
+    category = request.form['category']
+    scheme = request.form['scheme']
+    amount = request.form['amount']
+    expected_return = float(request.form['return'])
+    stock = float(request.form['stock'])
+    start = request.form['start']
+    end = request.form['end']
+    print(fund_house, category, scheme, amount, expected_return, start, end)
+    navs = getNAVs(fund_house, category, scheme, amount, start, end)
+    print(navs)
+    return render_template('get_button.html', amount=amount, expected_return=expected_return)
+    # sip_values = sip(navs, float(amount))
+    # tip_values = tip(navs, float(amount), 0.0)
+    # vip_values = vip(navs, float(amount), expected_return/12)
+
+    # tip_no_of_months = 0.0
+    # tip_amount_invested = 0.0
+    # tip_total_units = 0.0
+    # tip_maxSelf = 0.0
+    # for month, detail in tip_values.items():
+    #     tip_no_of_months = tip_no_of_months + 1
+    #     tip_amount_invested += float(detail.get("amount_invested"))
+    #     tip_amount_return = float(detail.get("target_amount"))
+    #     tip_total_units += float(detail.get("units_brought"))
+    #     tip_maxSelf = float(detail.get("tip_maxSelf"))
+    # tip_return = ((tip_amount_return/tip_amount_invested)
+    #               ** (24/tip_no_of_months) - 1)*100
+
+    # vip_no_of_months = 0.0
+    # vip_amount_invested = 0.0
+    # vip_total_units = 0.0
+    # for month, detail in vip_values.items():
+    #     vip_no_of_months = vip_no_of_months + 1
+    #     vip_amount_invested += float(detail.get("amount_invested"))
+    #     vip_amount_return = float(detail.get("target_amount"))
+    #     vip_total_units += float(detail.get("units_brought"))
+    # vip_return = ((vip_amount_return/vip_amount_invested)
+    #               ** (24/vip_no_of_months) - 1)*100
+
+    # sip_no_of_months = 0.0
+    # sip_amount_invested = 0.0
+    # sip_amount_return = 0.0
+    # sip_total_units = 0.0
+    # for month, detail in sip_values.items():
+    #     sip_no_of_months = sip_no_of_months + 1
+    #     sip_amount_invested += float(detail.get("amount_invested"))
+    #     sip_total_units += float(detail.get("units_brought"))
+    #     latest_nav = float(detail.get("nav"))
+    # sip_amount_return = sip_total_units * latest_nav
+    # sip_return = ((sip_amount_return/sip_amount_invested)
+    #               ** (24/sip_no_of_months) - 1)*100
+
+    # conclusion = {}
+    # conclusion["vip_no_of_months"] = vip_no_of_months
+    # conclusion["vip_amount_invested"] = vip_amount_invested
+    # conclusion["vip_amount_return"] = vip_amount_return
+    # conclusion["vip_total_units"] = vip_total_units
+    # conclusion["vip_return"] = vip_return
+    # conclusion["tip_no_of_months"] = tip_no_of_months
+    # conclusion["tip_amount_invested"] = tip_amount_invested
+    # conclusion["tip_amount_return"] = tip_amount_return
+    # conclusion["tip_total_units"] = tip_total_units
+    # conclusion["tip_return"] = tip_return
+    # conclusion["tip_maxSelf"] = tip_maxSelf
+    # conclusion["sip_no_of_months"] = sip_no_of_months
+    # conclusion["sip_amount_invested"] = sip_amount_invested
+    # conclusion["sip_amount_return"] = sip_amount_return
+    # conclusion["sip_total_units"] = sip_total_units
+    # conclusion["sip_return"] = sip_return
+
+    # return render_template('table.html', vip_details=vip_values, tip_details=tip_values, sip_details=sip_values, result=conclusion)
 
 
 def ret():
