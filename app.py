@@ -24,14 +24,28 @@ def index():
     scheme = request.form['scheme']
     amount = request.form['amount']
     expected_return = float(request.form['return'])
+    stock = float(request.form['stock'])
     start = request.form['start']
     end = request.form['end']
     print(fund_house, category, scheme, amount, expected_return, start, end)
     navs = getNAVs(fund_house, category, scheme, amount, start, end)
     print(navs)
     sip_values = sip(navs, float(amount))
-    vip_values = vip(navs, float(amount))
-    m_vip_values = modified_vip(navs, float(amount), expected_return/12)
+    tip_values = tip(navs, float(amount), 0.0)
+    vip_values = vip(navs, float(amount), expected_return/12)
+
+    tip_no_of_months = 0.0
+    tip_amount_invested = 0.0
+    tip_total_units = 0.0
+    tip_maxSelf = 0.0
+    for month, detail in tip_values.items():
+        tip_no_of_months = tip_no_of_months + 1
+        tip_amount_invested += float(detail.get("amount_invested"))
+        tip_amount_return = float(detail.get("target_amount"))
+        tip_total_units += float(detail.get("units_brought"))
+        tip_maxSelf = float(detail.get("tip_maxSelf"))
+    tip_return = ((tip_amount_return/tip_amount_invested)
+                  ** (24/tip_no_of_months) - 1)*100
 
     vip_no_of_months = 0.0
     vip_amount_invested = 0.0
@@ -43,17 +57,6 @@ def index():
         vip_total_units += float(detail.get("units_brought"))
     vip_return = ((vip_amount_return/vip_amount_invested)
                   ** (24/vip_no_of_months) - 1)*100
-
-    m_vip_no_of_months = 0.0
-    m_vip_amount_invested = 0.0
-    m_vip_total_units = 0.0
-    for month, detail in m_vip_values.items():
-        m_vip_no_of_months = m_vip_no_of_months + 1
-        m_vip_amount_invested += float(detail.get("amount_invested"))
-        m_vip_amount_return = float(detail.get("target_amount"))
-        m_vip_total_units += float(detail.get("units_brought"))
-    m_vip_return = ((m_vip_amount_return/m_vip_amount_invested)
-                    ** (24/m_vip_no_of_months) - 1)*100
 
     sip_no_of_months = 0.0
     sip_amount_invested = 0.0
@@ -74,18 +77,19 @@ def index():
     conclusion["vip_amount_return"] = vip_amount_return
     conclusion["vip_total_units"] = vip_total_units
     conclusion["vip_return"] = vip_return
-    conclusion["m_vip_no_of_months"] = m_vip_no_of_months
-    conclusion["m_vip_amount_invested"] = m_vip_amount_invested
-    conclusion["m_vip_amount_return"] = m_vip_amount_return
-    conclusion["m_vip_total_units"] = m_vip_total_units
-    conclusion["m_vip_return"] = m_vip_return
+    conclusion["tip_no_of_months"] = tip_no_of_months
+    conclusion["tip_amount_invested"] = tip_amount_invested
+    conclusion["tip_amount_return"] = tip_amount_return
+    conclusion["tip_total_units"] = tip_total_units
+    conclusion["tip_return"] = tip_return
+    conclusion["tip_maxSelf"] = tip_maxSelf
     conclusion["sip_no_of_months"] = sip_no_of_months
     conclusion["sip_amount_invested"] = sip_amount_invested
     conclusion["sip_amount_return"] = sip_amount_return
     conclusion["sip_total_units"] = sip_total_units
     conclusion["sip_return"] = sip_return
 
-    return render_template('table.html', vip_details=vip_values, m_vip_details=m_vip_values, sip_details=sip_values, result=conclusion)
+    return render_template('table.html', vip_details=vip_values, tip_details=tip_values, sip_details=sip_values, result=conclusion)
 
 
 def ret():
@@ -117,16 +121,24 @@ def sip(navs, initial):
     return values
 
 
-def vip(navs, initial):
+def tip(navs, initial, stock):
     totalAmount = 0
     totalUnits = 0
     n = len(navs)
+    maxSelf = 0.0
+
     values = OrderedDict()
+
     print("Month Number\tNAV\tTarget Amount\tAmount Invested\tUnits Brought")
     for i, (month, nav) in enumerate(navs.items()):
         target = (i+1)*initial
         currentValuation = totalUnits*nav
         amount = target - currentValuation
+        amount_from_stock = min(amount, stock)
+        stock = stock - amount_from_stock
+        amount_from_stock = max(0.0, amount_from_stock)
+        surplus_amount = max(0.0, amount - amount_from_stock)
+        maxSelf = max(maxSelf, surplus_amount)
         units = amount/nav
         totalUnits += units
         totalAmount += amount
@@ -136,10 +148,14 @@ def vip(navs, initial):
         values[month]["amount_invested"] = str(round(amount, 2))
         values[month]["units_brought"] = str(round(units, 2))
         values[month]["cumulative_units"] = str(round(totalUnits, 2))
+        values[month]["amount_from_stock"] = str(round(amount_from_stock, 2))
+        values[month]["surplus_amount"] = str(round(surplus_amount, 2))
+        values[month]["stock"] = str(round(stock, 2))
+        values[month]["tip_maxSelf"] = str(round(maxSelf, 2))
 
         print(month + "\t\t" + str(nav) + "\t\t" + str(round(target, 2)) +
               "\t\t" + str(round(amount, 2)) + "\t\t" + str(round(units, 2)))
-
+    # values[maxSelf] = maxSelf
     print()
     print("Total Units Brought :" + str(round(totalUnits, 2)))
     print("Total Amount Invested :" + str(round(totalAmount, 2)))
@@ -148,8 +164,8 @@ def vip(navs, initial):
     return values
 
 
-def modified_vip(navs, initial, expected_return):
-    print("-------------------------M-SIP------------------------")
+def vip(navs, initial, expected_return):
+    print("-------------------------VIP------------------------")
     totalAmount = 0
     totalUnits = 0
     n = len(navs)

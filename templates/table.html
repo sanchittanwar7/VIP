@@ -12,7 +12,46 @@
 
 <body>
   <div style="display: flex;justify-content: center;">
-    <div style="padding-left:5%;padding-right:5%;">
+    <div style="padding-left:2%;padding-right:2%;">
+      <h1>TIP</h1>
+      <table border="1" align="center" class="ui celled table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>NAV</th>
+            <th>Target Amount</th>
+            <th>Amount Invested</th>
+            <th>Amount from stock</th>
+            <th>Amount from self</th>
+            <th>Stock Status</th>
+            <th>Units Brought</th>
+            <th>Cumulative Units</th>
+          </tr>
+        </thead>
+        {% for month, detail in tip_details.items() %}
+        <tr>
+          <td>{{ month }}</td>
+          <td>{{ detail.get("nav") }}</td>
+          <td>{{ detail.get("target_amount") }}</td>
+          <td>{{ detail.get("amount_invested") }}</td>
+          <td>{{ detail.get("amount_from_stock") }}</td>
+          <td>{{ detail.get("surplus_amount") }}</td>
+          <td>{{ detail.get("stock") }}</td>
+          <td>{{ detail.get("units_brought") }}</td>
+          <td>{{ detail.get("cumulative_units") }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <h3>Return on Investment : {{ result.get("tip_return") }}%</h3>
+      <h3>No. Of Months : {{ result.get("tip_no_of_months") }}</h3>
+      <h3>Amount Invested : {{ result.get("tip_amount_invested") }}</h3>
+      <h3>Final Amount : {{ result.get("tip_amount_return") }}</h3>
+      <h3>No. Of Units : {{ result.get("tip_total_units") }}</h3>
+      <h3>Maximum Investment per month : {{ result.get("tip_maxSelf") }}</h3>
+    </div>
+
+    <div style="padding-left:2%;padding-right:2%;">
       <h1>VIP</h1>
       <table border="1" align="center" class="ui celled table">
         <thead>
@@ -44,39 +83,7 @@
       <h3>No. Of Units : {{ result.get("vip_total_units") }}</h3>
     </div>
 
-    <div style="padding-left:5%;padding-right:5%;">
-      <h1>M-VIP</h1>
-      <table border="1" align="center" class="ui celled table">
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>NAV</th>
-            <th>Target Amount</th>
-            <th>Amount Invested</th>
-            <th>Units Brought</th>
-            <th>Cumulative Units</th>
-          </tr>
-        </thead>
-        {% for month, detail in m_vip_details.items() %}
-        <tr>
-          <td>{{ month }}</td>
-          <td>{{ detail.get("nav") }}</td>
-          <td>{{ detail.get("target_amount") }}</td>
-          <td>{{ detail.get("amount_invested") }}</td>
-          <td>{{ detail.get("units_brought") }}</td>
-          <td>{{ detail.get("cumulative_units") }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-      <h3>Return on Investment : {{ result.get("m_vip_return") }}%</h3>
-      <h3>No. Of Months : {{ result.get("m_vip_no_of_months") }}</h3>
-      <h3>Amount Invested : {{ result.get("m_vip_amount_invested") }}</h3>
-      <h3>Final Amount : {{ result.get("m_vip_amount_return") }}</h3>
-      <h3>No. Of Units : {{ result.get("m_vip_total_units") }}</h3>
-    </div>
-
-    <div style="padding-left:5%;padding-right:5%;">
+    <div style="padding-left:2%;padding-right:2%;">
       <h1>SIP</h1>
       <table border="1" align="center" class="ui celled table">
         <thead>
